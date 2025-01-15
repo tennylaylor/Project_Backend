@@ -1,17 +1,23 @@
+const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-const todoRoutes = require("./routes/todoRoutes");
 require("dotenv").config();
 
+const todoRoutes = require("./routes/todoRoutes");
+
 const app = express();
+
+// Middleware to parse JSON
 app.use(express.json());
+
+//enable CORS
+
+app.use(cors({ origin: "http://localhost:5174" })); // Update to match your frontend's port
+///////app.use(cors({  origin: ["http://localhost:5174", "https://your-deployed-frontend.com"],}));//////
 
 // MongoDB connection
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Database connection failed:", err));
 

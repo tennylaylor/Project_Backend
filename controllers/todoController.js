@@ -23,6 +23,7 @@ exports.addTodo = async (req, res) => {
 
 // Update a to-do item
 exports.updateTodo = async (req, res) => {
+  console.log("Request Body:", req.body); // Log the request body/////////
   try {
     const updatedTodo = await TodoItem.findByIdAndUpdate(
       req.params.id,
@@ -31,6 +32,7 @@ exports.updateTodo = async (req, res) => {
     );
     res.json(updatedTodo);
   } catch (error) {
+    console.error("Error updating todo:", error); // Log the error for debugging////////////
     res.status(400).json({ error: "Failed to update to-do" });
   }
 };
