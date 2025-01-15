@@ -12,8 +12,8 @@ app.use(express.json());
 
 //enable CORS
 
-app.use(cors({ origin: "http://localhost:5174" })); // Update to match your frontend's port
-///////app.use(cors({  origin: ["http://localhost:5174", "https://your-deployed-frontend.com"],}));//////
+app.use(cors({ origin: "http://localhost:5173" })); // Update to match your frontend's port
+///////app.use(cors({  origin: ["http://localhost:5173", "https://your-deployed-frontend.com"],}));//////
 
 // MongoDB connection
 mongoose
