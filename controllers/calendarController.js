@@ -1,40 +1,57 @@
 const CalendarEvent = require("../models/CalendarEvent");
 
-// Get events for a specific week
-exports.getWeekEvents = async (req, res) => {
+// Get all events for the week
+exports.getEvents = async (req, res) => {
   try {
-    const { week } = req.params;
-    const calendar = await CalendarEvent.findOne({ week });
-    res.json(calendar || { week, days: [] });
+    const events = await CalendarEvent.find();
+    const organizedEvents = events.reduce((acc, event) => {
+      acc[event.day] = acc[event.day] || [];
+      acc[event.day].push(event);
+      return acc;
+    }, {});
+    res.json(organizedEvents);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch week events" });
+    res.status(500).json({ error: "Failed to fetch events" });
   }
 };
 
 // Add an event to a specific day
-exports.addEventToDay = async (req, res) => {
-  try {
-    const { week, day } = req.params;
-    const { time, description } = req.body;
+exports.addEvent = async (req, res) => {
+  const { day } = req.params;
+  const { time, description } = req.body;
 
-    let calendar = await CalendarEvent.findOne({ week });
-    if (!calendar) {
-      calendar = new CalendarEvent({
-        week,
-        days: [{ day, events: [{ time, description }] }],
-      });
-    } else {
-      const dayData = calendar.days.find((d) => d.day === day);
-      if (dayData) {
-        dayData.events.push({ time, description });
-      } else {
-        calendar.days.push({ day, events: [{ time, description }] });
-      }
+  if (!day || !time || !description) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const event = new CalendarEvent({ day, time, description });
+    await event.save();
+    const updatedEvents = await CalendarEvent.find({ day });
+    res.status(201).json({ events: updatedEvents });
+  } catch (error) {
+    res.status(400).json({ error: "Failed to add event" });
+  }
+};
+
+// Delete an event from a specific day
+exports.deleteEvent = async (req, res) => {
+  const { day, eventId } = req.params;
+
+  try {
+    const event = await CalendarEvent.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
     }
 
-    await calendar.save();
-    res.status(201).json(calendar);
+    if (event.day !== day) {
+      return res.status(400).json({ error: "Day mismatch for the event" });
+    }
+
+    await CalendarEvent.findByIdAndDelete(eventId);
+    const updatedEvents = await CalendarEvent.find({ day });
+    res.status(200).json({ events: updatedEvents });
   } catch (error) {
-    res.status(400).json({ error: "Failed to add event to day" });
+    res.status(400).json({ error: "Failed to delete event" });
   }
 };

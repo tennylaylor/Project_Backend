@@ -1,43 +1,18 @@
 const express = require("express");
+const router = express.Router();
 const {
-  getWeekEvents,
-  addEventToDay,
+  getEvents,
+  addEvent,
+  deleteEvent,
 } = require("../controllers/calendarController");
 
-const router = express.Router();
+// Route to get all events
+router.get("/", getEvents);
 
-// Get events for a specific week
-router.get("/:week", getWeekEvents);
+// Route to add an event to a specific day
+router.post("/:day", addEvent);
 
-// Add an event to a specific day
-router.post("/:week/:day", addEventToDay);
-
-// DELETE /api/calendar/:day/:eventId
-router.delete("/:day/:eventId", async (req, res) => {
-  const { day, eventId } = req.params;
-
-  try {
-    const calendar = await Calendar.findOne();
-    if (!calendar) return res.status(404).json({ error: "Calendar not found" });
-
-    const dayEvents = calendar.days.find((d) => d.day === day);
-    if (!dayEvents) return res.status(404).json({ error: "Day not found" });
-
-    dayEvents.events = dayEvents.events.filter(
-      (event) => event._id.toString() !== eventId
-    );
-    await calendar.save();
-
-    res
-      .status(200)
-      .json({
-        message: "Event removed successfully",
-        events: dayEvents.events,
-      });
-  } catch (error) {
-    console.error("Error removing event:", error);
-    res.status(500).json({ error: "Failed to remove event" });
-  }
-});
+// Route to delete an event from a specific day
+router.delete("/:day/:eventId", deleteEvent);
 
 module.exports = router;
