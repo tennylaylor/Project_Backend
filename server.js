@@ -3,12 +3,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const calendarRoutes = require("./routes/calendarRoutes");
 const todoRoutes = require("./routes/todoRoutes");
 
 const app = express();
 
 // Middleware to parse JSON
+
 app.use(express.json());
+app.use("/api/calendar", calendarRoutes);
 
 //enable CORS
 
