@@ -21,16 +21,19 @@ app.use(
 // Middleware to parse JSON
 
 app.use(express.json());
-app.use("/api/calendar", weeklyCalendarRoutes);
 
 // MongoDB connection
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Database connection failed:", err));
 
 // Routes
 app.use("/api/todos", todoRoutes);
+app.use("/api/calendar", weeklyCalendarRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
