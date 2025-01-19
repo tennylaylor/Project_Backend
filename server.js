@@ -8,15 +8,20 @@ const todoRoutes = require("./routes/todoRoutes");
 
 const app = express();
 
+//enable CORS
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Your frontend's URL
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+); // Update to match your frontend's port
+///////app.use(cors({  origin: ["http://localhost:5173", "https://your-deployed-frontend.com"],}));//////
+
 // Middleware to parse JSON
 
 app.use(express.json());
 app.use("/api/calendar", weeklyCalendarRoutes);
-
-//enable CORS
-
-app.use(cors({ origin: "http://localhost:5173" })); // Update to match your frontend's port
-///////app.use(cors({  origin: ["http://localhost:5173", "https://your-deployed-frontend.com"],}));//////
 
 // MongoDB connection
 mongoose
