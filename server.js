@@ -2,6 +2,7 @@ const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const magnetRoutes = require("./routes/magnetRoutes");
 
 const weeklyCalendarRoutes = require("./routes/weeklyCalendarRoutes");
 const todoRoutes = require("./routes/todoRoutes");
@@ -34,6 +35,7 @@ mongoose
 // Routes
 app.use("/api/todos", todoRoutes);
 app.use("/api/calendar", weeklyCalendarRoutes);
+app.use("/api/magnets", magnetRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
