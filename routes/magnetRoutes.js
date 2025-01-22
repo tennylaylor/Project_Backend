@@ -23,16 +23,18 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update magnet position
+// Update magnet position or text
 router.put("/:id", async (req, res) => {
   try {
+    const { id } = req.params;
     const updatedMagnet = await Magnet.findByIdAndUpdate(
-      req.params.id,
+      id,
       req.body,
-      {
-        new: true,
-      }
+      { new: true } // Ensures the updated document is returned
     );
+    if (!updatedMagnet) {
+      return res.status(404).json({ error: "Magnet not found" });
+    }
     res.json(updatedMagnet);
   } catch (error) {
     res.status(400).json({ error: "Failed to update magnet" });

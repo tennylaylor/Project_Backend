@@ -2,8 +2,8 @@ const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const magnetRoutes = require("./routes/magnetRoutes");
 
+const magnetRoutes = require("./routes/magnetRoutes");
 const weeklyCalendarRoutes = require("./routes/weeklyCalendarRoutes");
 const todoRoutes = require("./routes/todoRoutes");
 

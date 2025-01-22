@@ -27,7 +27,6 @@ exports.addWeeklyEvent = async (req, res) => {
     const { day } = req.params;
     const { time, description } = req.body;
 
-    // Validate required fields
     if (!day || !time || !description) {
       return res.status(400).json({
         error: "Missing required fields",
@@ -39,7 +38,6 @@ exports.addWeeklyEvent = async (req, res) => {
       });
     }
 
-    // Create and save the new event
     const newEvent = new WeeklyCalendarEvent({
       day,
       time,
@@ -48,7 +46,6 @@ exports.addWeeklyEvent = async (req, res) => {
 
     await newEvent.save();
 
-    // Fetch updated events for the day
     const updatedEvents = await WeeklyCalendarEvent.find({ day }).sort({
       time: 1,
     });
@@ -63,7 +60,30 @@ exports.addWeeklyEvent = async (req, res) => {
   }
 };
 
-// Delete an event
+// Update an event for a specific day
+exports.updateEvent = async (req, res) => {
+  const { day, eventId } = req.params;
+  const { time, description } = req.body;
+
+  try {
+    const updatedEvent = await WeeklyCalendarEvent.findByIdAndUpdate(
+      eventId,
+      { time, description, day },
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    res.json(updatedEvent);
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(400).json({ error: "Failed to update event" });
+  }
+};
+
+// Delete an event for a specific day
 exports.deleteWeeklyEvent = async (req, res) => {
   try {
     const { day, eventId } = req.params;
@@ -77,7 +97,6 @@ exports.deleteWeeklyEvent = async (req, res) => {
       return res.status(404).json({ error: "Event not found" });
     }
 
-    // Fetch updated events for the day
     const updatedEvents = await WeeklyCalendarEvent.find({ day }).sort({
       time: 1,
     });
