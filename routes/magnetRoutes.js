@@ -16,10 +16,10 @@ router.get("/", async (req, res) => {
 // Add a new magnet
 router.post("/", async (req, res) => {
   try {
-    const newMagnet = new Magnet(req.body);
+    const newMagnet = new Magnet(req.body); // Create a new magnet using the request body
 
     const savedMagnet = await newMagnet.save(); // Save the new magnet to the database
-    res.status(201).json(savedMagnet);
+    res.status(201).json(savedMagnet); // Return the saved magnet with a 201 Created status
   } catch (error) {
     res.status(400).json({ error: "Failed to add magnet" });
   }
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 // Update magnet position or text
 router.put("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Extract magnet ID from the request parameters
     const updatedMagnet = await Magnet.findByIdAndUpdate(
       id,
       req.body,
@@ -37,7 +37,7 @@ router.put("/:id", async (req, res) => {
     if (!updatedMagnet) {
       return res.status(404).json({ error: "Magnet not found" });
     }
-    res.json(updatedMagnet);
+    res.json(updatedMagnet); // Return the updated magnet
   } catch (error) {
     res.status(400).json({ error: "Failed to update magnet" });
   }
@@ -46,8 +46,8 @@ router.put("/:id", async (req, res) => {
 // Delete a magnet
 router.delete("/:id", async (req, res) => {
   try {
-    await Magnet.findByIdAndDelete(req.params.id);
-    res.json({ message: "Magnet deleted" });
+    await Magnet.findByIdAndDelete(req.params.id); // Delete the magnet by ID
+    res.json({ message: "Magnet deleted" }); // Return success message
   } catch (error) {
     res.status(400).json({ error: "Failed to delete magnet" });
   }

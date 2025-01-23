@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+// Define the schema for a weekly calendar event
 const WeeklyCalendarEventSchema = new mongoose.Schema({
   day: {
     type: String,
@@ -29,6 +29,8 @@ const WeeklyCalendarEventSchema = new mongoose.Schema({
   },
 });
 
+// Export the model for use in other parts of the application
+// The model name is "WeeklyCalendarEvent" and is linked to the defined schema
 module.exports = mongoose.model(
   "WeeklyCalendarEvent",
   WeeklyCalendarEventSchema

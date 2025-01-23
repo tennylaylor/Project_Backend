@@ -3,7 +3,7 @@ const WeeklyCalendarEvent = require("../models/WeeklyCalendarEvent");
 // Fetch all weekly events
 exports.getWeeklyEvents = async (req, res) => {
   try {
-    const events = await WeeklyCalendarEvent.find().sort({ time: 1 });
+    const events = await WeeklyCalendarEvent.find().sort({ time: 1 }); // fetch all events
 
     // Group events by day
     const groupedEvents = events.reduce((acc, event) => {
