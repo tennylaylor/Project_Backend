@@ -5,6 +5,7 @@ const Magnet = require("../models/Magnet");
 // Get all magnets
 router.get("/", async (req, res) => {
   try {
+    //Fetch all magnets from the database
     const magnets = await Magnet.find();
     res.json(magnets);
   } catch (error) {
@@ -16,7 +17,8 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const newMagnet = new Magnet(req.body);
-    const savedMagnet = await newMagnet.save();
+
+    const savedMagnet = await newMagnet.save(); // Save the new magnet to the database
     res.status(201).json(savedMagnet);
   } catch (error) {
     res.status(400).json({ error: "Failed to add magnet" });
@@ -30,7 +32,7 @@ router.put("/:id", async (req, res) => {
     const updatedMagnet = await Magnet.findByIdAndUpdate(
       id,
       req.body,
-      { new: true } // Ensures the updated document is returned
+      { new: true } // update the magnet position and update the text
     );
     if (!updatedMagnet) {
       return res.status(404).json({ error: "Magnet not found" });
